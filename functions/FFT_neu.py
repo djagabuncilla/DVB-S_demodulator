@@ -49,7 +49,7 @@ def apply_hamming_window(signal):
     return [signal[n] * (0.54 - 0.46 * math.cos(2 * math.pi * n / (N - 1))) for n in range(N)]
 
 
-filename = '333.pcm'
+filename = 'add_resources/333.pcm'
 N = 8192
 carrier_bin = 1441
 signal = read_pcm_file(filename, N)

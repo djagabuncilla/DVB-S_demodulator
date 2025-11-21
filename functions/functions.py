@@ -43,18 +43,6 @@ def apply_hamming_window(signal):
         return signal
     return [signal[n] * (0.54 - 0.46 * math.cos(2 * math.pi * n / (N - 1))) for n in range(N)]
 
-def plot_spectrum(spectrum, N):
-    freqs = [-N//2 + k for k in range(N)]
-    plt.figure(figsize=(12, 3))
-    plt.plot(freqs, spectrum)
-    plt.title('Амплитудный спектр (в дБ)')
-    plt.xlabel('Частота, Гц')
-    plt.ylabel('Амплитуда, дБ')
-    plt.grid(True)
-    plt.xlim(-N//2, N//2)
-    plt.ylim(-70, 10)
-    plt.show()
-
 def conversion_to_a_logarithmic_scale(amplitude):
     max_amp = max(amplitude)
     if max_amp == 0:
@@ -126,10 +114,27 @@ def fftshift(ampl):
     N = len(ampl)
     return ampl[N//2:] + ampl[:N//2]
 
+def plot_spectrum(spectrum, N):
+    freqs = [-N//2 + k for k in range(N)]
+    plt.figure(figsize=(12, 3))
+    plt.plot(freqs, spectrum)
+    plt.title('Амплитудный спектр (в дБ)')
+    plt.xlabel('Частота, Гц')
+    plt.ylabel('Амплитуда, дБ')
+    plt.grid(True)
+    plt.xlim(-N//2, N//2)
+    plt.ylim(-70, 10)
+    plt.show()
+
 def building_a_spectrum(signal, N):
     spectrum = fast_fourier_transform(signal)
     spectrum = fftshift(spectrum)
-    spectrum.reverse
+    spectrum.reverse()
     ampl = [z / len(spectrum) for z in spectrum]  # нормализуем по длине сигнала
     amplitude = [math.sqrt(z.real**2 + z.imag**2) for z in ampl]
-    plot_spectrum(amplitude, N)
+    max_amp = max(amplitude)
+    if max_amp == 0:
+        max_amp = 0.48
+    eps = 1e-12
+    db_spectrum = [20 * math.log10(max(a / max_amp, eps)) for a in amplitude]
+    plot_spectrum(db_spectrum, N)

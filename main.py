@@ -7,4 +7,3 @@ signal = frequency_shift(signal, carrier_bin, N)
 plot_time_signal(signal)
 building_a_spectrum(signal, N)
 
-
