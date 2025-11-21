@@ -138,3 +138,26 @@ def building_a_spectrum(signal, N):
     eps = 1e-12
     db_spectrum = [20 * math.log10(max(a / max_amp, eps)) for a in amplitude]
     plot_spectrum(db_spectrum, N)
+
+def generate_fir(fc, num_taps, N):
+    if num_taps % 2 == 0:
+        num_taps += 1
+    M = num_taps // 2
+    h = [0.0] * num_taps
+    for n in range(num_taps):
+        k = n - M
+        if k == 0:
+            h[n] = 2 * fc / N
+        else:
+            h[n] = (math.sin(2 * math.pi * fc * k / N)) / (math.pi * k)
+    return h
+def fir_filter_apply(signal, taps):
+
+    filtered = []
+    for n in range(len(signal)):
+        y = 0j
+        for k in range(len(taps)):
+            if n - k >= 0:
+                y += taps[k] * signal[n - k]
+        filtered.append(y)
+    return filtered

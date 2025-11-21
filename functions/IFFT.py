@@ -133,3 +133,4 @@ def building_a_spectrum(signal, N):
 
 
 
+
