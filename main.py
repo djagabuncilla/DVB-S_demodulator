@@ -28,7 +28,7 @@ filtered_signal = inverse_fast_fourier_transform(spectrum)
 interpolated_signal = interpolate_signal(filtered_signal, 16, 8)  # 10 точек на 3
 print(len(filtered_signal)) #длина фильтрованного сигнала
 print(len(interpolated_signal)) #длина сигнала после интерполяции
-plot_time_signal(filtered_signal)
+#plot_time_signal(filtered_signal)
 plot_time_signal(interpolated_signal)
 
 
