@@ -20,7 +20,7 @@ class MainWindow(QMainWindow):
 
     def setup_plot(self):
             # 1. Берём ссылку на QWidget из .ui
-            plot_widget = self.ui.findChild(QWidget, "plotWidget")
+            plot_widget = self.ui.findChild(QWidget, "plot_time_Widget")
             if plot_widget is None:
                 raise RuntimeError("Не найден QWidget с objectName='plotWidget'")
 
