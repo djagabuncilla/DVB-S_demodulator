@@ -22,12 +22,30 @@ def frequency_shift(signal, freq_bin, N):
         shifted_signal.append(signal[n] * rotator)
     return shifted_signal
 
-def fast_fourier_transform(compl_sig):
+def fast_fourier_transform(compl_sig): #обёртка требуется для того, чтобы обрабатывать сигнал любой длины
+    N_orig = len(compl_sig)
+    if N_orig == 0:
+        return []
+    
+    N_padded = 1
+    while N_padded < N_orig:
+        N_padded *= 2
+    
+    if N_padded > N_orig:
+        padded_sig = list(compl_sig) + [0j] * (N_padded - N_orig)
+    else: 
+        padded_sig = compl_sig
+
+    spectrum = fast_fourier_transform_core(padded_sig)
+
+    return spectrum
+
+def fast_fourier_transform_core(compl_sig):
     N = len(compl_sig)
     if N <= 1:
         return compl_sig
-    ch = fast_fourier_transform(compl_sig[0::2])
-    nch = fast_fourier_transform(compl_sig[1::2])
+    ch = fast_fourier_transform_core(compl_sig[0::2])
+    nch = fast_fourier_transform_core(compl_sig[1::2])
     result = [0j] * N
     for k in range(N // 2):
         angle = -2 * math.pi * k / N
@@ -85,13 +103,33 @@ def plot_time_signal(signal):
     plt.tight_layout()
     plt.show()
 
-def inverse_fast_fourier_transform(compl_sig):
+def inverse_fast_fourier_transform(compl_sig): #обёртка требуется для того, чтобы обрабатывать сигнал любой длины
+
+    N_orig = len(compl_sig)
+    if N_orig == 0:
+        return []
+    
+    N_padded = 1
+    while N_padded < N_orig:
+        N_padded *= 2
+    
+    if N_padded > N_orig:
+        padded_spec = list(compl_sig) + [0j] * (N_padded - N_orig)
+    else: 
+        padded_spec = compl_sig
+
+    signal = inverse_fast_fourier_transform_core(padded_spec)
+
+    return signal
+
+
+def inverse_fast_fourier_transform_core(compl_sig):
     N = len(compl_sig)
     if N <= 1:
         return compl_sig
 
-    ch = inverse_fast_fourier_transform(compl_sig[0::2])
-    nch = inverse_fast_fourier_transform(compl_sig[1::2])
+    ch = inverse_fast_fourier_transform_core(compl_sig[0::2])
+    nch = inverse_fast_fourier_transform_core(compl_sig[1::2])
 
     result = [0j] * N
     for k in range(N // 2):
